@@ -1,0 +1,130 @@
+.page {
+  padding: 30px;
+  font-family: Circular Lt, sans-serif;
+  font-weight: 100;
+}
+
+.layout {
+  max-width: 1800px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 225px 1fr;
+  gap: 30px;
+  align-items: start;
+  padding-top: 30px;
+}
+
+.devNav {
+  display: flex;
+  gap: 4px;
+  padding: 12px 40px;
+  background: #1a1a1a;
+}
+
+.devNavItem,
+.devNavItemActive {
+  padding: 8px 16px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #999999;
+}
+
+.devNavItemActive {
+  color: #ffffff;
+  background: #333333;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  padding-top: 50px;
+}
+
+.layout main {
+}
+
+.mobileFilterToggle {
+  display: none;
+}
+
+.mobileCloseButton {
+  display: none;
+}
+
+.sidebarBackdrop {
+  display: none;
+}
+
+@media (max-width: 900px) {
+
+  .page {
+    padding: 15px;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+    padding-top: 0;
+  }
+
+  .mobileFilterToggle {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    background: #eee;
+    border: none;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .mobileFilterToggle span {
+    font-size: 18px;
+  }
+
+  /* Drawer: hidden off-canvas by default, slides in from the left when open */
+  .sidebar,
+  .sidebarOpen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 280px;
+    max-width: 85vw;
+    background: #ffffff;
+    padding: 60px 20px 20px;
+    overflow-y: auto;
+    z-index: 1100;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+
+  .mobileCloseButton {
+    display: block;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: none;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .sidebarBackdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1099;
+  }
+
+}

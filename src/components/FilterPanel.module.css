@@ -1,0 +1,176 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.section {
+  border-bottom: 1px solid #ccc;
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.columnIcon {
+  width: 55px;
+  height: auto;
+  object-fit: contain;
+}
+
+.columnTitle {
+  font-family: freight-display-pro, freight, serif;
+  font-size: 18px;
+  font-weight: 100;
+  margin: 0;
+  font-style: italic;
+}
+
+.sectionHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 16px 0;
+  font: inherit;
+}
+
+.sectionTitle {
+  font-family: freight-display-pro, freight, serif;
+  font-size: 24px;
+  font-weight: 100;
+  line-height: 1.3em;
+  text-transform: uppercase;
+}
+
+.chevron,
+.chevronOpen {
+  display: inline-block;
+  transition: transform 0.15s ease;
+  transform: rotate(90deg);
+  transform-origin: 50% 55%;
+  font-size: 20px;
+  font-family: monospace;
+}
+
+.chevronOpen {
+  transform: rotate(-90deg);
+}
+
+.sectionBodyOpen,
+.sectionBodyClosed {
+  display: grid;
+  transition: grid-template-rows 0.25s ease;
+  overflow: hidden;
+}
+
+.sectionBodyOpen {
+  grid-template-rows: 1fr;
+}
+
+.sectionBodyClosed {
+  grid-template-rows: 0fr;
+  height: 0;
+}
+
+.sectionBodyInner {
+  min-height: 0;
+  padding-bottom: 20px;
+}
+
+.childListOpen,
+.childListClosed {
+  display: grid;
+  transition: grid-template-rows 0.2s ease;
+  overflow: hidden;
+}
+
+.childListOpen {
+  grid-template-rows: 1fr;
+}
+
+.childListClosed {
+  grid-template-rows: 0fr;
+  height: 0;
+}
+
+.childListInner {
+  min-height: 0;
+  list-style: none;
+  padding-left: 20px;
+  margin: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stateGroup {
+  margin-bottom: 16px;
+}
+
+.stateLabel {
+  font-size: 11px;
+  color: #6b6b6b;
+  margin: 0 0 6px;
+}
+
+.optionList {
+  min-height: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option,
+.optionDisabled {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1em;
+  cursor: pointer;
+}
+
+.optionDisabled {
+  color: #b5b2ac;
+  cursor: not-allowed;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 20px;
+}
+
+.actionLink {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+  text-align: left;
+}
+
+@media (max-width: 900px) {
+  .columnHeader {
+    display: block;
+  }
+
+  .columnIcon {
+    margin-bottom: 10px;
+  }
+  .actionLink[value="Show"] {
+    display: none;
+  }
+}

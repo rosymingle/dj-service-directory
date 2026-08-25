@@ -1,0 +1,22 @@
+.grid {
+  position: relative;
+}
+
+.item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: transform 0.2s ease, width 0.2s ease;
+}
+
+.empty {
+  text-align: center;
+  color: #6b6b6b;
+  padding: 60px 0;
+  font-size: 14px;
+}
+
+.stackedItem {
+  width: 100%;
+  margin-bottom: 24px;
+}

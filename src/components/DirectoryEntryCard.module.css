@@ -1,0 +1,202 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  position: relative;
+}
+
+.featured {
+  grid-column: span 2;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.imageWrap {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.tileWrap {
+  z-index: 3;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dinkus {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #000000;
+  color: #ffffff;
+  border-radius: 5px;
+  font-size: 11px;
+  line-height: 1.4em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  z-index: 4;
+}
+
+.overlay,
+.overlayOpen {
+  position: absolute;
+  inset: 0;
+  background: rgba(236, 231,235, 95%);
+  border: 3px solid #000000;
+  padding: 10px 10px 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: -1;
+}
+
+.overlayOpen,
+.tileWrap:hover .overlay, .tileWrap:hover .overlayOpen,
+.tileWrap:active .overlay, .tileWrap:active .overlayOpen,
+.tileWrap:focus .overlay, .tileWrap:focus .overlayOpen {
+  opacity: 1;
+  z-index: 6;
+}
+
+.overlayDescription {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #2b2b2b;
+  margin: 0 0 10px;
+}
+
+.overlayFrame {
+  display: block;
+  max-height: calc(100% - 50px);
+  overflow-x: scroll;
+}
+.overlayMeta {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  color: #2b2b2b;
+  margin: 0 0 12px;
+}
+
+.durationDisplay {
+  white-space: nowrap;
+}
+
+.metaDivider {
+  color: #b5b2ac;
+}
+
+.storesBlock {
+  margin: 8px 0;
+}
+
+.storesLabel {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b6b6b;
+  margin: 0 0 4px;
+}
+.storesLabel:before {
+  content: ' ';
+  background-image: url('https://res.cloudinary.com/david-jones/image/upload/f_auto,q_auto/BeautyServices/pin?4');
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 7px;
+  height: 10px;
+  margin-right: 4px;
+}
+
+.storesList {
+  font-size: 12px;
+  line-height: 1.3em;
+  color: #2b2b2b;
+  margin: 0;
+}
+.storesFootnote {
+  font-style: italic;
+  margin-top: 5px;
+  color: #6b6b6b;
+}
+
+.ctaBlock {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.primaryCta {
+  background: #000000;
+  color: #ffffff;
+  border: 0;
+  border-radius: 7px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  border: none;
+  padding: 10px 20px 8px;
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 auto 0 0;
+}
+
+.secondaryCta {
+  font-size: 13px;
+  color: #000000;
+  text-decoration: underline;
+  text-align: center;
+}
+
+.shortcutCta {
+  background: none;
+  color: #000000;
+  border: 1px solid #000000;
+  border-radius: 7px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  padding: 10px 20px 8px;
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 auto 0 0;
+}
+
+.category {
+  font-size: 11px;
+  line-height: 1.2em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b6b6b;
+  margin: 12px 0 8px;
+}
+
+.title {
+  font-family: freight-display-pro, freight, serif;
+  font-size: 18px;
+  font-weight: 100;
+  line-height: 1.3em;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Shortcut tile — a plain clickable card, no overlay, no CTA */
+.shortcutTile {
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
