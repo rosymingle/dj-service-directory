@@ -56,9 +56,9 @@ export function entryMatchesAllFilters(
   );
 }
 
-export function sortCheckboxesForDisplay(
-  checkboxes: FilterCheckboxEntry[]
-): FilterCheckboxEntry[] {
+export function sortCheckboxesForDisplay<T extends FilterCheckboxEntry>(
+  checkboxes: T[]
+): T[] {
   return [...checkboxes].sort((a, b) => {
     const rankA = isTagCheckbox(a) ? a.fields.sortOrder : a.fields.priority;
     const rankB = isTagCheckbox(b) ? b.fields.sortOrder : b.fields.priority;

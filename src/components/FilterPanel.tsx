@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import type { DirectoryEntryType, FilterCheckboxEntry } from '../types/contentful';
+import type { DirectoryEntryType, FilterCheckboxEntry, TagEntry } from '../types/contentful';
 import { useDirectoryFilters } from '../hooks/useDirectoryFilters';
-import { filterValidCheckboxes, isTopLevelCheckbox, sortCheckboxesForDisplay } from '../lib/filters';
+import { filterValidCheckboxes, isTopLevelCheckbox, isTagCheckbox, sortCheckboxesForDisplay } from '../lib/filters';
 import { groupStoresByState } from '../lib/stores';
 import styles from './FilterPanel.module.css';
+
 
 interface FilterPanelProps {
   directory: DirectoryEntryType;
@@ -11,9 +12,7 @@ interface FilterPanelProps {
 }
 
 function checkboxLabel(checkbox: FilterCheckboxEntry): string {
-  return checkbox.sys.contentType.sys.id === 'tag'
-    ? checkbox.fields.label
-    : checkbox.fields.brandName;
+  return isTagCheckbox(checkbox) ? checkbox.fields.label : checkbox.fields.brandName;
 }
 
 interface AccordionSectionProps {
@@ -113,9 +112,9 @@ export function FilterPanel({ directory, filters }: FilterPanelProps) {
                 // API happened to return them — now sorted the same way
                 // as every other checkbox list, so Priority actually
                 // takes effect for subcategories too.
-                const children = isTag
-                  ? sortCheckboxesForDisplay(tagTree.childrenOf.get(checkbox.sys.id) ?? [])
-                  : [];
+                const children: TagEntry[] = isTag
+                    ? sortCheckboxesForDisplay<TagEntry>(tagTree.childrenOf.get(checkbox.sys.id) ?? [])
+                    : [];
 
                 return (
                   <li key={checkbox.sys.id}>

@@ -1,4 +1,3 @@
-import type { DirectoryEntryFields } from '../types/contentful';
 import type { DirectoryListingEntry } from '../types/contentful';
 
 export type SortOrder = 'recommended' | 'brand-az' | 'tag-az' | 'duration-low-high' | 'price-low-high';

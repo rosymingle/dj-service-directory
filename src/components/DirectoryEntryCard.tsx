@@ -5,6 +5,7 @@ import { useBookingOverlay } from '../context/BookingOverlayContext';
 import { mergeStoreAvailability } from '../lib/stores';
 import { useDirectoryFilters } from '../hooks/useDirectoryFilters';
 import { getCardImageDimensions, type CardSpan } from '../lib/images';
+import { getAssetUrl } from '../lib/assets';
 import styles from './DirectoryEntryCard.module.css';
 
 interface DirectoryEntryCardProps {
@@ -41,15 +42,13 @@ export function DirectoryEntryCard({ entry, directory, filters }: DirectoryEntry
   const isShortcut = Boolean(fields.shortcutTarget);
 
   const span: CardSpan = fields.fullWidth ? 'full' : fields.featured ? 2 : 1;
-  const { cssAspectRatio, fixedHeight, fetchWidth, fetchHeight } = getCardImageDimensions(
+  const { cssAspectRatio, fetchWidth, fetchHeight } = getCardImageDimensions(
     directory.fields.imageAspectRatio,
     span
   );
-  const rawFileUrl = fields.image.fields.file?.url ?? '';
-  const imageUrl = buildImageUrl(rawFileUrl, fetchWidth, fetchHeight);
-  const imageWrapStyle = cssAspectRatio
-    ? { aspectRatio: cssAspectRatio }
-    : { height: fixedHeight, aspectRatio: 'auto' };
+  const normalizedAssetUrl = getAssetUrl(fields.image);
+  const imageUrl = buildImageUrl(normalizedAssetUrl, fetchWidth, fetchHeight);
+  const imageWrapStyle = { aspectRatio: cssAspectRatio };
 
   const mergedStores = mergeStoreAvailability(fields);
   const hasOverride = Boolean(fields.storeListOverride);

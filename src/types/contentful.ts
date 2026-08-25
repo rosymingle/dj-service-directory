@@ -1,4 +1,35 @@
-import type { Asset, Entry } from 'contentful';
+// These types intentionally do NOT use Entry<Skeleton> from the
+// `contentful` package. That approach requires every field to be wrapped
+// in the SDK's own EntryFieldTypes.* generics — getting that wrong
+// silently collapses every field into an unusable `{ [x: string]: undefined }`
+// type instead of a clear compile error. These are plain interfaces
+// matching the real shape Contentful returns at runtime instead — stable
+// regardless of which contentful package version is installed. Fetch
+// functions in src/api/directory.ts cast the SDK's response into these
+// shapes once, at the boundary.
+
+export interface EntrySys {
+  id: string;
+  contentType: {
+    sys: {
+      id: string;
+    };
+  };
+}
+
+export interface AssetFile {
+  url: string;
+  contentType?: string;
+}
+
+export interface AssetEntry {
+  sys: { id: string };
+  fields: {
+    title?: string;
+    description?: string;
+    file?: AssetFile;
+  };
+}
 
 // ── Tag ──────────────────────────────────────────────
 export interface TagFields {
@@ -6,9 +37,12 @@ export interface TagFields {
   slug: string;
   sortOrder?: number;
   active?: boolean;
-  parent?: Entry<TagFields>;
+  parent?: TagEntry;
 }
-export type TagEntry = Entry<TagFields>;
+export interface TagEntry {
+  sys: EntrySys;
+  fields: TagFields;
+}
 
 // ── Store ────────────────────────────────────────────
 export type StoreState = 'NSW' | 'VIC' | 'QLD' | 'SA' | 'WA' | 'ACT' | 'NT' | 'TAS' | 'NZ';
@@ -22,16 +56,22 @@ export interface StoreFields {
   sortOrder?: number;
   active: boolean;
 }
-export type StoreEntry = Entry<StoreFields>;
+export interface StoreEntry {
+  sys: EntrySys;
+  fields: StoreFields;
+}
 
 // ── Brand ────────────────────────────────────────────
 export interface BrandFields {
   brandName: string;
   slug: string;
-  logo?: Asset;
+  logo?: AssetEntry;
   priority?: number;
 }
-export type BrandEntry = Entry<BrandFields>;
+export interface BrandEntry {
+  sys: EntrySys;
+  fields: BrandFields;
+}
 
 // ── Booking Provider ─────────────────────────────────
 export interface BookingProviderFields {
@@ -40,7 +80,10 @@ export interface BookingProviderFields {
   urlTemplate?: string;
   openInNewTab?: boolean;
 }
-export type BookingProviderEntry = Entry<BookingProviderFields>;
+export interface BookingProviderEntry {
+  sys: EntrySys;
+  fields: BookingProviderFields;
+}
 
 // ── Directory ────────────────────────────────────────
 export type FilterCheckboxEntry = TagEntry | BrandEntry;
@@ -48,8 +91,8 @@ export type FilterCheckboxEntry = TagEntry | BrandEntry;
 export interface DirectoryFields {
   title: string;
   slug: string;
-  heroImageDe?: Asset;
-  heroImageMo?: Asset;
+  heroImageDe?: AssetEntry;
+  heroImageMo?: AssetEntry;
   intro?: string;
   resultsPerPage: number;
   showNames?: boolean;
@@ -59,7 +102,7 @@ export interface DirectoryFields {
   showLoadMore?: boolean;
   showSort?: boolean;
   lhColumnTitle?: string;
-  lhColumnIcon?: Asset;
+  lhColumnIcon?: AssetEntry;
   filter1Title?: string;
   filter1Checkboxes?: FilterCheckboxEntry[];
   filter2Title?: string;
@@ -68,14 +111,17 @@ export interface DirectoryFields {
   filter3Checkboxes?: FilterCheckboxEntry[];
   imageAspectRatio?: string; // e.g. "4:3", "1:1" — see src/lib/images.ts
 }
-export type DirectoryEntryType = Entry<DirectoryFields>;
+export interface DirectoryEntryType {
+  sys: EntrySys;
+  fields: DirectoryFields;
+}
 
 // ── Directory Entry (the central content type) ───────
 export interface DirectoryEntryFields {
   directory: DirectoryEntryType;
   title?: string;
   slug: string;
-  image: Asset;
+  image: AssetEntry;
   imageTransform?: string;
   description?: string;
   brand?: BrandEntry;
@@ -109,4 +155,7 @@ export interface DirectoryEntryFields {
   secondaryCtaUrl?: string;
   secondaryCtaOpenInNewTab?: boolean;
 }
-export type DirectoryListingEntry = Entry<DirectoryEntryFields>;
+export interface DirectoryListingEntry {
+  sys: EntrySys;
+  fields: DirectoryEntryFields;
+}
