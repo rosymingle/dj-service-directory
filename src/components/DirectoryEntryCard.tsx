@@ -68,7 +68,11 @@ export function DirectoryEntryCard({ entry, directory, filters }: DirectoryEntry
   return (
     <article
       className={cardClassName}
-      onMouseEnter={() => setOverlayVisible(true)}
+      onMouseMove={(e) => {
+        if (e.movementX !== 0 || e.movementY !== 0) {
+          setOverlayVisible(true);
+        }
+      }}
       onMouseLeave={() => setOverlayVisible(false)}
     >
       <div className={styles.tileWrap}
