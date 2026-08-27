@@ -187,8 +187,13 @@
   font-size: 18px;
   font-weight: 100;
   line-height: 1.3em;
-  font-weight: 600;
+  font-weight: 100;
   margin: 0;
+}
+
+.brandName {
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 /* Shortcut tile — a plain clickable card, no overlay, no CTA */

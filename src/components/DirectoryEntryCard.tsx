@@ -26,9 +26,14 @@ function categoryLabel(entry: DirectoryListingEntry): string {
     .join(', ');
 }
 
-function titleLine(entry: DirectoryListingEntry): string {
+function titleLine(entry: DirectoryListingEntry) {
   const brand = entry.fields.brand?.fields.brandName;
-  return brand ? `${brand} ${entry.fields.title ?? ''}` : entry.fields.title ?? '';
+  return (
+    <>
+      {brand && <span className={styles.brandName}>{brand} </span>}
+      {entry.fields.title ?? ''}
+    </>
+  );
 }
 
 export function DirectoryEntryCard({ entry, directory, filters }: DirectoryEntryCardProps) {
