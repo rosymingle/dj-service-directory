@@ -6,16 +6,22 @@ const LOAD_MORE_THRESHOLD = 4;
 
 export function useResultsDisplay(
   directory: DirectoryEntryType,
-  displayedEntries: DirectoryListingEntry[]
+  displayedEntries: DirectoryListingEntry[],
+  preserveIncomingOrder = false
 ) {
   const resultsPerPage = directory.fields.resultsPerPage || 12;
 
   const [sortOrder, setSortOrder] = useState<SortOrder>('recommended');
   const [visibleCount, setVisibleCount] = useState(resultsPerPage);
 
+  // In Popular view, displayedEntries already arrives sorted by
+  // popularRank (see buildPopularList) — re-sorting here by whatever
+  // sortOrder defaults to (Recommended → priority) would silently
+  // discard that ordering. preserveIncomingOrder skips the sort step
+  // entirely in that case.
   const sortedEntries = useMemo(
-    () => sortEntries(displayedEntries, sortOrder),
-    [displayedEntries, sortOrder]
+    () => (preserveIncomingOrder ? displayedEntries : sortEntries(displayedEntries, sortOrder)),
+    [displayedEntries, sortOrder, preserveIncomingOrder]
   );
 
   useEffect(() => {
@@ -33,8 +39,6 @@ export function useResultsDisplay(
     setVisibleCount((prev) => prev + resultsPerPage);
   }
 
-  // Reveals every remaining result at once, bypassing pagination entirely
-  // — distinct from loadMore, which only advances by one page.
   function showAll() {
     setVisibleCount(sortedEntries.length);
   }

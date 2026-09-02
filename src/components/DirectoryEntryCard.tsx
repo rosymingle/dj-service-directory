@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { sanitizeHtml } from '../lib/html';
 import type { DirectoryEntryType, DirectoryListingEntry } from '../types/contentful';
 import { resolvePrimaryCta, resolveSecondaryCta } from '../lib/booking';
 import { useBookingOverlay } from '../context/BookingOverlayContext';
@@ -110,7 +111,12 @@ export function DirectoryEntryCard({ entry, directory, filters }: DirectoryEntry
             <div className={styles.overlayMeta}>
               {fields.durationDisplay && <span className={styles.durationDisplay}>{fields.durationDisplay}</span>}
               {fields.durationDisplay && fields.priceDisplay && <span className={styles.metaDivider}>|</span>}
-              {fields.priceDisplay && <span className={styles.priceDisplay}>{fields.priceDisplay}</span>}
+              {fields.priceDisplay && (
+                <span
+                  className={styles.priceDisplay}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(fields.priceDisplay) }}
+                />
+              )}
             </div>
 
             {showStoresBlock && (
