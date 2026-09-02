@@ -3,6 +3,19 @@ export type AspectRatioOption = (typeof ASPECT_RATIO_OPTIONS)[number];
 
 export type CardSpan = 1 | 2 | 'full';
 
+// Featured spanning (a wider tile) only ever applies in the Popular
+// list — in the normal Results view every tile is uniform width
+// regardless of the Featured flag. Full Width is unaffected by view
+// mode (not yet in active use, left as-is per your note).
+export function getEffectiveSpan(
+  fields: { featured?: boolean; fullWidth?: boolean },
+  isPopularView: boolean
+): CardSpan {
+  if (fields.fullWidth) return 'full';
+  if (fields.featured && isPopularView) return 2;
+  return 1;
+}
+
 interface CardImageDimensions {
   cssAspectRatio: string;
   fetchWidth: number;

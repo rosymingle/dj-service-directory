@@ -5,7 +5,7 @@ import { resolvePrimaryCta, resolveSecondaryCta } from '../lib/booking';
 import { useBookingOverlay } from '../context/BookingOverlayContext';
 import { mergeStoreAvailability } from '../lib/stores';
 import { useDirectoryFilters } from '../hooks/useDirectoryFilters';
-import { getCardImageDimensions, type CardSpan } from '../lib/images';
+import { getCardImageDimensions, getEffectiveSpan, type CardSpan } from '../lib/images';
 import { getAssetUrl } from '../lib/assets';
 import styles from './DirectoryEntryCard.module.css';
 
@@ -47,7 +47,7 @@ export function DirectoryEntryCard({ entry, directory, filters }: DirectoryEntry
   const showTitles = directory.fields.showTitles !== false;
   const isShortcut = Boolean(fields.shortcutTarget);
 
-  const span: CardSpan = fields.fullWidth ? 'full' : fields.featured ? 2 : 1;
+  const span: CardSpan = getEffectiveSpan(fields, filters.showPopular);
   const { cssAspectRatio, fetchWidth, fetchHeight } = getCardImageDimensions(
     directory.fields.imageAspectRatio,
     span
@@ -65,7 +65,7 @@ export function DirectoryEntryCard({ entry, directory, filters }: DirectoryEntry
 
   const cardClassName = [
     styles.card,
-    fields.featured && styles.featured,
+    span === 2 && styles.featured,
     fields.fullWidth && styles.fullWidth,
   ]
     .filter(Boolean)

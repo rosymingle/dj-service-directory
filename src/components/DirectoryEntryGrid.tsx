@@ -1,5 +1,6 @@
 import type { DirectoryEntryType, DirectoryListingEntry } from '../types/contentful';
 import { DirectoryEntryCard } from './DirectoryEntryCard';
+import { getEffectiveSpan } from '../lib/images';
 import type { useDirectoryFilters } from '../hooks/useDirectoryFilters';
 import { useMasonry, type MasonryItem } from '../hooks/useMasonry';
 import styles from './DirectoryEntryGrid.module.css';
@@ -15,7 +16,7 @@ interface DirectoryEntryGridProps {
 export function DirectoryEntryGrid({ entries, directory, filters }: DirectoryEntryGridProps) {
   const masonryItems: MasonryItem[] = entries.map((entry) => ({
     id: entry.sys.id,
-    span: entry.fields.fullWidth ? 'full' : entry.fields.featured ? 2 : 1,
+    span: getEffectiveSpan(entry.fields, filters.showPopular),
   }));
 
   const { containerRef, registerItem, positions, containerHeight } = useMasonry(masonryItems);
