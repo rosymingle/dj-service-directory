@@ -19,7 +19,7 @@ const SORT_OPTIONS: { value: SortOrder; label: string }[] = [
 
 export function ResultsSection({ directory, entries, filters }: ResultsSectionProps) {
   const { sortOrder, setSortOrder, visibleEntries, totalCount, hasMore, loadMore, showAll } =
-    useResultsDisplay(directory, entries);
+    useResultsDisplay(directory, entries, filters.showPopular);
 
   const showResultsCount = directory.fields.showResultsCount !== false;
   const showSort = directory.fields.showSort !== false;
