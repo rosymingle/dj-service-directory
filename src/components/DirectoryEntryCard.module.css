@@ -77,7 +77,7 @@
 .overlayFrame {
   display: block;
   max-height: calc(100% - 50px);
-  overflow-x: scroll;
+  overflow-y: auto;
 }
 .overlayMeta {
   display: flex;
