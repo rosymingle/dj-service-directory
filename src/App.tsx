@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { fetchDirectoryBySlug, fetchDirectoryEntries, fetchAllTags, fetchAllStores } from './api/directory';
 import { DirectoryHero } from './components/DirectoryHero';
 import { FilterPanel } from './components/FilterPanel';
@@ -11,20 +11,13 @@ import { useDirectoryFilters } from './hooks/useDirectoryFilters';
 import type { DirectoryEntryType, DirectoryListingEntry, TagEntry, StoreEntry } from './types/contentful';
 import styles from './App.module.css';
 
-// TEMPORARY: mocks the real site nav (Fashion / Beauty / etc.) so both
-// directories can be tested side by side during migration, each with its
-// own real, shareable URL. Remove once the real David Jones page nav is
-// wired up around this module.
 const DEV_NAV_DIRECTORIES = [
-  { label: 'Beauty', slug: 'beauty-services' },
-  { label: 'Fashion', slug: 'fashion-services' },
+  { label: 'FASHION', slug: 'fashion-services' },
+  { label: 'BEAUTY', slug: 'beauty-services' },
 ];
 
 const DEFAULT_SLUG = DEV_NAV_DIRECTORIES[0].slug;
 
-// Path is just "/<slug>" — e.g. /beauty-services, /fashion-services.
-// Falls back to the default directory for "/" or any unrecognized path,
-// so a stray URL doesn't just show a blank page.
 function slugFromPathname(pathname: string): string {
   const clean = pathname.replace(/^\/+/, '').replace(/\/+$/, '');
   const match = DEV_NAV_DIRECTORIES.find((d) => d.slug === clean);
@@ -39,21 +32,41 @@ function DevDirectoryNav({
   onSelect: (slug: string) => void;
 }) {
   return (
-    <div className={styles.devNav}>
-      {DEV_NAV_DIRECTORIES.map((d) => (
-        
-    <a key={d.slug} href={`/${d.slug}`}
-      className={`${d.slug === currentSlug ? styles.devNavItemActive : styles.devNavItem} resetButton`}
-      onClick={(e) => {
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-        e.preventDefault();
-        onSelect(d.slug);
-      }}
-    >
-      {d.label}
-    </a>
-      ))}
-    </div>
+    <nav className={styles.devNav}>
+      <button
+        type="button"
+        className={styles.burgerMenuToggle}
+        onClick={() => burgerMenuToggle()}
+      >☰</button>
+      <a href="https://www.davidjones.com/services/store-services"
+        className={`${styles.devNavItemActive} ${styles.servicesLink}`}
+        >DJs AT YOUR SERVICE</a>
+      <div className={styles.burgerMe}>
+        {DEV_NAV_DIRECTORIES.map((d) => (
+          <a
+            key={d.slug}
+            href={`/${d.slug}`}
+            className={`${d.slug === currentSlug ? styles.devNavItemActive : styles.devNavItem} resetButton`}
+            onClick={(e) => {
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+              e.preventDefault();
+              onSelect(d.slug);
+            }}
+          >
+            {d.label}
+          </a>
+        ))}
+        <a href="https://www.davidjones.com/services/book-a-bra-fitting"
+          className={styles.devNavItem}
+          >BOOK A BRA FITTING</a>
+        <a href="https://www.davidjones.com/services/health-and-wellbeing"
+          className={styles.devNavItem}
+          >HEALTH &amp; WELLBEING</a>
+        <a href="https://www.davidjones.com/services/store-services/gifts"
+          className={styles.devNavItem}
+          >GIFTING</a>
+      </div>
+    </nav>
   );
 }
 
@@ -69,8 +82,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
 
-  // Keeps directorySlug in sync with the browser's own back/forward
-  // navigation between the two directory URLs.
   useEffect(() => {
     function handlePopState() {
       setDirectorySlug(slugFromPathname(window.location.pathname));
@@ -115,9 +126,6 @@ function App() {
     };
   }, [directorySlug, retryCount]);
 
-  // A genuine navigation between directories — pushes a new history
-  // entry (unlike the filter panel's own replaceState-based URL syncing,
-  // which only ever adjusts query params on the current page).
   function navigateToDirectory(slug: string) {
     if (slug === directorySlug) return;
     window.history.pushState(null, '', `/${slug}`);
@@ -129,8 +137,8 @@ function App() {
   if (error) {
     return (
       <>
-        {nav}
         <div className={styles.page}>
+          {nav}
           <ErrorState message={error} onRetry={() => setRetryCount((c) => c + 1)} />
         </div>
         <BookingOverlay />
@@ -141,8 +149,8 @@ function App() {
   if (isLoading || !directory) {
     return (
       <>
-        {nav}
         <div className={styles.page}>
+          {nav}
           <LoadingState />
         </div>
         <BookingOverlay />
@@ -152,7 +160,6 @@ function App() {
 
   return (
     <>
-      {nav}
       <ErrorBoundary>
         <DirectoryPage
           key={directory.sys.id}
@@ -160,6 +167,7 @@ function App() {
           entries={entries}
           allTags={allTags}
           allStores={allStores}
+          nav={nav}
         />
       </ErrorBoundary>
       <BookingOverlay />
@@ -172,11 +180,13 @@ function DirectoryPage({
   entries,
   allTags,
   allStores,
+  nav,
 }: {
   directory: DirectoryEntryType;
   entries: DirectoryListingEntry[];
   allTags: TagEntry[];
   allStores: StoreEntry[];
+  nav: ReactNode;
 }) {
   const filters = useDirectoryFilters(directory, allTags, allStores, entries);
   const [isMobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -188,6 +198,8 @@ function DirectoryPage({
   return (
     <>
       <DirectoryHero directory={directory} />
+      {/* 🎉 Look who made it down the runway below the Hero! */}
+      {nav}
       <div className={styles.page}>
         <button
           type="button"
