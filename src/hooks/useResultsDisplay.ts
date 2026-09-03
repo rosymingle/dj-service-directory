@@ -9,34 +9,35 @@ export function useResultsDisplay(
   displayedEntries: DirectoryListingEntry[],
   preserveIncomingOrder = false
 ) {
-  const resultsPerPage = directory.fields.resultsPerPage || 12;
+  const resultsPerPage = directory.fields.resultsPerPage;
+  // Blank Results Per Page means pagination is off entirely — every
+  // result shows at once, Load More never appears.
+  const paginationEnabled = typeof resultsPerPage === 'number';
 
   const [sortOrder, setSortOrder] = useState<SortOrder>('recommended');
-  const [visibleCount, setVisibleCount] = useState(resultsPerPage);
+  const [visibleCount, setVisibleCount] = useState(paginationEnabled ? resultsPerPage : Infinity);
 
-  // In Popular view, displayedEntries already arrives sorted by
-  // popularRank (see buildPopularList) — re-sorting here by whatever
-  // sortOrder defaults to (Recommended → priority) would silently
-  // discard that ordering. preserveIncomingOrder skips the sort step
-  // entirely in that case.
   const sortedEntries = useMemo(
     () => (preserveIncomingOrder ? displayedEntries : sortEntries(displayedEntries, sortOrder)),
     [displayedEntries, sortOrder, preserveIncomingOrder]
   );
 
   useEffect(() => {
-    setVisibleCount(resultsPerPage);
-  }, [displayedEntries, resultsPerPage]);
+    setVisibleCount(paginationEnabled ? resultsPerPage : Infinity);
+  }, [displayedEntries, resultsPerPage, paginationEnabled]);
 
   const remainder = sortedEntries.length - visibleCount;
   const effectiveVisibleCount =
-    remainder > 0 && remainder <= LOAD_MORE_THRESHOLD ? sortedEntries.length : visibleCount;
+    paginationEnabled && remainder > 0 && remainder <= LOAD_MORE_THRESHOLD
+      ? sortedEntries.length
+      : visibleCount;
 
   const visibleEntries = sortedEntries.slice(0, effectiveVisibleCount);
-  const hasMore = effectiveVisibleCount < sortedEntries.length;
+  const hasMore = paginationEnabled && effectiveVisibleCount < sortedEntries.length;
 
   function loadMore() {
-    setVisibleCount((prev) => prev + resultsPerPage);
+    if (!paginationEnabled) return;
+    setVisibleCount((prev) => (typeof prev === 'number' ? prev + resultsPerPage : prev));
   }
 
   function showAll() {

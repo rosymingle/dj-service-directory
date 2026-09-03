@@ -94,7 +94,7 @@ export interface DirectoryFields {
   heroImageDe?: AssetEntry;
   heroImageMo?: AssetEntry;
   intro?: string;
-  resultsPerPage: number;
+  resultsPerPage?: number;
   showNames?: boolean;
   showTitles?: boolean;
   showPopularView?: boolean;
