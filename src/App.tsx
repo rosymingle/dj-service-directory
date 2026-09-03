@@ -36,7 +36,6 @@ function DevDirectoryNav({
       <button
         type="button"
         className={styles.burgerMenuToggle}
-        onClick={() => burgerMenuToggle()}
       >☰</button>
       <a href="https://www.davidjones.com/services/store-services"
         className={`${styles.devNavItemActive} ${styles.servicesLink}`}
