@@ -22,7 +22,7 @@ function buildImageUrl(rawFileUrl: string, fetchWidth: number, fetchHeight: numb
 
 function categoryLabel(entry: DirectoryListingEntry): string {
   return (entry.fields.tags ?? [])
-    .filter((tag) => !tag.fields.parent)
+    .filter((tag) => !tag.fields.parents || tag.fields.parents.length === 0)
     .map((tag) => tag.fields.label)
     .join(', ');
 }

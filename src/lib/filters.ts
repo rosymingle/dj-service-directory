@@ -1,6 +1,6 @@
 import type { DirectoryEntryFields, FilterCheckboxEntry, TagEntry, BrandEntry } from '../types/contentful';
 import type { TagTree } from './tags';
-import { entryMatchesTagSelection } from './tags';
+import { entryMatchesTagSelection, isScopedSelectionKey } from './tags';
 
 export function isTagCheckbox(checkbox: FilterCheckboxEntry): checkbox is TagEntry {
   return checkbox.sys.contentType.sys.id === 'tag';
@@ -15,16 +15,10 @@ export function filterValidCheckboxes(checkboxes: FilterCheckboxEntry[]): Filter
 }
 
 export function isTopLevelCheckbox(checkbox: FilterCheckboxEntry): boolean {
-  if (isTagCheckbox(checkbox)) return !checkbox.fields.parent;
+  if (isTagCheckbox(checkbox)) return !checkbox.fields.parents || checkbox.fields.parents.length === 0;
   return true;
 }
 
-// selectedIds within one slot can mix tag ids (top-level and/or
-// subcategory) and brand ids. Tag ids are matched all together via
-// entryMatchesTagSelection, which applies parent/child narrowing —
-// they are NOT tested independently, since that's what caused parent+
-// child selections to be a no-op. Brand ids are matched separately and
-// OR'd in alongside the tag result, same mixed-type behavior as before.
 export function entryMatchesFilterSlot(
   entry: DirectoryEntryFields,
   allCheckboxesInSlot: FilterCheckboxEntry[],
@@ -33,8 +27,11 @@ export function entryMatchesFilterSlot(
 ): boolean {
   if (selectedIds.length === 0) return true;
 
-  const tagIds = selectedIds.filter((id) => tagTree.byId.has(id));
-  const otherIds = selectedIds.filter((id) => !tagTree.byId.has(id));
+  // Scoped keys (e.g. "parentId::childId") represent shared-tag
+  // selections and need to reach entryMatchesTagSelection too, not fall
+  // through to the brand-matching path below.
+  const tagIds = selectedIds.filter((id) => tagTree.byId.has(id) || isScopedSelectionKey(id));
+  const otherIds = selectedIds.filter((id) => !tagTree.byId.has(id) && !isScopedSelectionKey(id));
 
   if (tagIds.length > 0 && entryMatchesTagSelection(entry.tags ?? [], tagIds, tagTree)) {
     return true;

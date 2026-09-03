@@ -37,7 +37,7 @@ export interface TagFields {
   slug: string;
   sortOrder?: number;
   active?: boolean;
-  parent?: TagEntry;
+  parents?: TagEntry[];
 }
 export interface TagEntry {
   sys: EntrySys;

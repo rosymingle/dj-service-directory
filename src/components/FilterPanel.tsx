@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { DirectoryEntryType, FilterCheckboxEntry, TagEntry } from '../types/contentful';
 import { useDirectoryFilters } from '../hooks/useDirectoryFilters';
 import { filterValidCheckboxes, isTopLevelCheckbox, isTagCheckbox, sortCheckboxesForDisplay } from '../lib/filters';
+import { getChildSelectionKey } from '../lib/tags';
 import { groupStoresByState } from '../lib/stores';
 import styles from './FilterPanel.module.css';
 
@@ -32,7 +33,7 @@ function AccordionSection({ title, isOpen, onToggle, children }: AccordionSectio
         aria-expanded={isOpen}
       >
         <span className={styles.sectionTitle}>{title}</span>
-        <span className={isOpen ? styles.chevronOpen : styles.chevron}>〉</span>
+        <span className={isOpen ? styles.chevronOpen : styles.chevron}>〉</span>
       </button>
       <div className={isOpen ? styles.sectionBodyOpen : styles.sectionBodyClosed}>
         <div className={styles.sectionBodyInner}>{children}</div>
@@ -108,10 +109,6 @@ export function FilterPanel({ directory, filters }: FilterPanelProps) {
                 const isSelected = slot.selectedIds.includes(checkbox.sys.id);
                 const isAvailable = available.has(checkbox.sys.id);
                 const isTag = checkbox.sys.contentType.sys.id === 'tag';
-                // Children were previously rendered in whatever order the
-                // API happened to return them — now sorted the same way
-                // as every other checkbox list, so Priority actually
-                // takes effect for subcategories too.
                 const children: TagEntry[] = isTag
                     ? sortCheckboxesForDisplay<TagEntry>(tagTree.childrenOf.get(checkbox.sys.id) ?? [])
                     : [];
@@ -132,16 +129,23 @@ export function FilterPanel({ directory, filters }: FilterPanelProps) {
                       <div className={isSelected ? styles.childListOpen : styles.childListClosed}>
                         <ul className={styles.childListInner}>
                           {children.map((child) => {
-                            const childSelected = slot.selectedIds.includes(child.sys.id);
-                            const childAvailable = available.has(child.sys.id);
+                            // A child shared across multiple parents gets a
+                            // key scoped to THIS parent (e.g.
+                            // "makeupId::redeemableId"), so the same tag can
+                            // be independently selected under each parent it
+                            // belongs to, rather than one checkbox state
+                            // applying everywhere it's nested.
+                            const selectionKey = getChildSelectionKey(checkbox.sys.id, child);
+                            const childSelected = slot.selectedIds.includes(selectionKey);
+                            const childAvailable = available.has(selectionKey);
                             return (
-                              <li key={child.sys.id}>
+                              <li key={selectionKey}>
                                 <label className={childAvailable ? styles.option : styles.optionDisabled}>
                                   <input
                                     type="checkbox"
                                     checked={childSelected}
                                     disabled={!childAvailable && !childSelected}
-                                    onChange={() => toggleSlotOption(i as 0 | 1 | 2, child.sys.id)}
+                                    onChange={() => toggleSlotOption(i as 0 | 1 | 2, selectionKey)}
                                   />
                                   {child.fields.label}
                                 </label>

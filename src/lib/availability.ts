@@ -2,6 +2,7 @@ import type { DirectoryListingEntry, FilterCheckboxEntry, StoreEntry } from '../
 import type { TagTree } from './tags';
 import { entryMatchesAllFilters, isTagCheckbox } from './filters';
 import { mergeStoreAvailability } from './stores';
+import { getChildSelectionKey } from './tags';
 
 interface FilterSlot {
   checkboxes: FilterCheckboxEntry[];
@@ -33,15 +34,19 @@ export function entryMatchesEverything(
 }
 
 // Every top-level checkbox in a slot, PLUS every tag's children — a
-// subcategory needs its own availability check too, since it's a valid,
-// independently selectable filter option even though it isn't part of
-// the slot's own curated checkbox list.
+// subcategory needs its own availability check too. A child shared
+// across multiple parents gets its scoped key (via getChildSelectionKey)
+// rather than its plain id, since that's the same key the checkbox
+// itself now sends on selection — the availability check has to test
+// the exact same key or it can never match.
 function getAllCandidateIds(checkboxes: FilterCheckboxEntry[], tagTree: TagTree): string[] {
   const ids = new Set<string>();
   checkboxes.forEach((checkbox) => {
     ids.add(checkbox.sys.id);
     if (isTagCheckbox(checkbox)) {
-      (tagTree.childrenOf.get(checkbox.sys.id) ?? []).forEach((child) => ids.add(child.sys.id));
+      (tagTree.childrenOf.get(checkbox.sys.id) ?? []).forEach((child) => {
+        ids.add(getChildSelectionKey(checkbox.sys.id, child));
+      });
     }
   });
   return Array.from(ids);
