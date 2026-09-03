@@ -176,9 +176,9 @@
 .category {
   font-size: 11px;
   line-height: 1.2em;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #6b6b6b;
+  font-weight: 100;
   margin: 12px 0 8px;
 }
 
@@ -192,7 +192,7 @@
 }
 
 .brandName {
-  font-weight: 600;
+  font-weight: 400;
   text-transform: uppercase;
 }
 

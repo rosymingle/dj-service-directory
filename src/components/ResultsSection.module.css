@@ -25,8 +25,9 @@
 }
 
 .count {
-  font-size: 13px;
-  color: #6b6b6b;
+  font-family: freight-display-pro, freight, serif;
+  font-size: 22px;
+  line-height: 0.8em;
   margin: 0;
   white-space: nowrap;
 }
@@ -34,8 +35,10 @@
 .sortLabel {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: 10px;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 

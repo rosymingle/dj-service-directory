@@ -194,7 +194,7 @@ function DirectoryPage({
           className={`${styles.mobileFilterToggle} resetButton`}
           onClick={() => setMobileFiltersOpen(true)}
         >
-          ☰ Filter Services
+          <span>☰</span> Filter Services
         </button>
 
         <div className={styles.layout}>

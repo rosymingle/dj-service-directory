@@ -27,8 +27,8 @@ export function ResultsSection({ directory, entries, filters }: ResultsSectionPr
 
   const resultsCountText =
     visibleEntries.length < totalCount
-      ? `${visibleEntries.length} of ${totalCount} results`
-      : `${totalCount} ${totalCount === 1 ? 'result' : 'results'}`;
+      ? `${visibleEntries.length} of ${totalCount} RESULTS`
+      : `${totalCount} ${totalCount === 1 ? 'RESULT' : 'RESULTS'}`;
 
   return (
     <div>
@@ -36,7 +36,7 @@ export function ResultsSection({ directory, entries, filters }: ResultsSectionPr
         <div className={styles.header}>
           <h2 className={styles.popularTitle}>Popular Services</h2>
           <button type="button" className={`${styles.allServicesLink} resetButton`} onClick={filters.clearAllFilters}>
-            All Services
+            Show All
           </button>
         </div>
       ) : (

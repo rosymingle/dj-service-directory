@@ -12,18 +12,19 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .columnIcon {
   width: 55px;
   height: auto;
   object-fit: contain;
+  margin-bottom: 10px;
 }
 
 .columnTitle {
   font-family: freight-display-pro, freight, serif;
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 100;
   margin: 0;
   font-style: italic;
@@ -54,8 +55,8 @@
   display: inline-block;
   transition: transform 0.15s ease;
   transform: rotate(90deg);
-  transform-origin: 50% 55%;
-  font-size: 20px;
+  transform-origin: 0% 55%;
+  font-size: 18px;
   font-family: monospace;
 }
 

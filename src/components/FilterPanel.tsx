@@ -32,7 +32,7 @@ function AccordionSection({ title, isOpen, onToggle, children }: AccordionSectio
         aria-expanded={isOpen}
       >
         <span className={styles.sectionTitle}>{title}</span>
-        <span className={isOpen ? styles.chevronOpen : styles.chevron}>›</span>
+        <span className={isOpen ? styles.chevronOpen : styles.chevron}>〉</span>
       </button>
       <div className={isOpen ? styles.sectionBodyOpen : styles.sectionBodyClosed}>
         <div className={styles.sectionBodyInner}>{children}</div>
