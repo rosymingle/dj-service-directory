@@ -31,25 +31,33 @@ function DevDirectoryNav({
   currentSlug: string;
   onSelect: (slug: string) => void;
 }) {
+  const [isMenuOpen, setMenuOpen] = useState(false);
+
+  function handleSelect(slug: string) {
+    setMenuOpen(false);
+    onSelect(slug);
+  }
+
   return (
     <nav className={styles.devNav}>
       <button
         type="button"
         className={styles.burgerMenuToggle}
+        onClick={() => setMenuOpen((v) => !v)}
+        aria-expanded={isMenuOpen}
+        aria-label="Toggle navigation menu"
       >☰</button>
       <a href="https://www.davidjones.com/services/store-services"
         className={`${styles.devNavItemActive} ${styles.servicesLink}`}
         >DJs AT YOUR SERVICE</a>
-      <div className={styles.burgerMe}>
+      <div className={isMenuOpen ? `${styles.burgerMe} ${styles.burgerMeOpen}` : styles.burgerMe}>
         {DEV_NAV_DIRECTORIES.map((d) => (
-          <a
-            key={d.slug}
-            href={`/${d.slug}`}
+          <a key={d.slug} href={`/${d.slug}`}
             className={`${d.slug === currentSlug ? styles.devNavItemActive : styles.devNavItem} resetButton`}
             onClick={(e) => {
               if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
               e.preventDefault();
-              onSelect(d.slug);
+              handleSelect(d.slug);
             }}
           >
             {d.label}
@@ -65,6 +73,9 @@ function DevDirectoryNav({
           className={styles.devNavItem}
           >GIFTING</a>
       </div>
+      {isMenuOpen && (
+        <div className={styles.devNavBackdrop} onClick={() => setMenuOpen(false)} />
+      )}
     </nav>
   );
 }
